@@ -24,9 +24,9 @@ class ApiBookController extends Controller
     public function store(Request $request)
     {
         $book = new Book();
-        $book->title = $request->title;
-        $book->author = $request->author;
-        $book->year = $request->year;
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->year = $request->input('year');
         $book->save();
 
         return response()->json([
@@ -36,9 +36,9 @@ class ApiBookController extends Controller
     public function update(Request $request, $id)
     {
         $book = Book::findOrFail($id);
-        $book->title = $request->title;
-        $book->author = $request->author;
-        $book->year = $request->year;
+        $book->title = $request->input('title');
+        $book->author = $request->input('author');
+        $book->year = $request->input('year');
         $book->save();
 
         return response()->json([
