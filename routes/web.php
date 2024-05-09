@@ -99,13 +99,13 @@ Route::delete('/books/{id}', function ($id){
     return redirect()->route('books.index');
 })->name('books.destroy');
 
-// Latihan 1
+// // Latihan 1
 // // Route untuk menampilkan beberapa buku dalam bentuk tabel
-// Route::get('/books', function(){
+// Route::get('/book', function(){
 //     $books = Book::all();
 //     return view('books.index', ['books' => $books]);
 // })->name('books.index');
-// Route untuk menampilkan beberapa peminjam dalam bentuk tabel
+// // Route untuk menampilkan beberapa peminjam dalam bentuk tabel
 // Route::get('/borrowers', function(){
 //     $borrowers = Borrower::all();
 //     return view('borrowers.index', ['borrowers' => $borrowers]);
