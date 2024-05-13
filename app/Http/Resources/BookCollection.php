@@ -19,6 +19,14 @@ class BookCollection extends ResourceCollection
             'data' => $this->collection,
         ];
     }
+
+    // public function toArray($request)
+    // {
+    //     return [
+    //         'data' => BookResource::collection($this->collection),
+    //     ];
+    // }
+
     // public function with($request): array
     // {
     //     return [
