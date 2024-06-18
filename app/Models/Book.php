@@ -15,4 +15,8 @@ class Book extends Model
         'author',
         'year',
     ];
+
+    public function borrowings() {
+        return $this->hasMany('App\Models\Borrowing');
+    }
 }
