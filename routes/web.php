@@ -99,25 +99,120 @@ Route::delete('/books/{id}', function ($id){
     return redirect()->route('books.index');
 })->name('books.destroy');
 
-// // Latihan 1
-// // Route untuk menampilkan beberapa buku dalam bentuk tabel
-// Route::get('/book', function(){
-//     $books = Book::all();
-//     return view('books.index', ['books' => $books]);
-// })->name('books.index');
-// // Route untuk menampilkan beberapa peminjam dalam bentuk tabel
-// Route::get('/borrowers', function(){
-//     $borrowers = Borrower::all();
-//     return view('borrowers.index', ['borrowers' => $borrowers]);
-// })->name('borrowers.index');
+use App\Models\Borrowing;
+
+// Latihan 1
+Route::prefix('latihan1')->group(function () {
+    Route::get('/books', function () {
+        return view('latihan-1.book', [
+            'books' => Book::all()
+        ]);
+    });
+
+    Route::get('/borrowers', function () {
+        $borrowers = Borrowing::all();
+        $uniqueBorrowers = $borrowers->unique(function ($item) {
+            return $item->user->name;
+        });
+        return view('latihan-1.borrower', [
+            'borrowers' => $uniqueBorrowers
+        ]);
+    });
+
+    Route::get('/borrowings', function () {
+        $borrowings = Borrowing::all();
+        return view('latihan-1.borrowing', [
+            'borrowings' => $borrowings
+        ]);
+    });
+});
 
 use App\Http\Controllers\BookController;
 
+// route books page
+// route untuk menampilkan index view dengan data buku
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
-
+// route untuk menampilkan form tambah buku
 Route::get('/books/create', [BookController::class, 'create'])->name('books.create');
+// route untuk menyimpan data buku yang baru ditambahkan
 Route::post('/books', [BookController::class, 'store'])->name('books.store');
+// route untuk menampilkan form edit buku
 Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('books.edit');
+// route untuk menyimpan data buku yang telah diubah
 Route::put('/books/{id}', [BookController::class, 'update'])->name('books.update');
+// route untuk menghapus data
 Route::delete('/books/{id}', [BookController::class, 'destroy'])->name('books.destroy');
 
+use App\Models\User;
+
+// Latihan 2
+Route::prefix('latihan2')->group(function () {
+    Route::get('/borrower', function () {
+        $borrowers = Borrowing::all();
+        $uniqueBorrowers = $borrowers->unique(function ($item) {
+            return $item->user->name;
+        });
+        return view('latihan-2.borrower', [
+            'borrowers' => $uniqueBorrowers
+        ]);
+    })->name('borrower2.index');
+
+    // Borrowing
+    Route::get('/borrowing', function () {
+        $borrowings = Borrowing::all();
+        return view('latihan-2.borrowing.index', [
+            'borrowings' => $borrowings
+        ]);
+    })->name('borrowing2.index');
+
+    Route::get('borrowing/{id}/edit', function ($id) {
+        $borrowing = Borrowing::findOrFail($id);
+        return view('latihan-2.edit', [
+            'borrowing' => $borrowing
+        ]);
+    })->name('borrowing2.edit');
+
+    Route::delete('borrowing/{id}', function ($id) {
+        $borrowing = Borrowing::findOrFail($id);
+        $borrowing->delete();
+        return redirect()->route('borrowing2.index');
+    })->name('borrowing2.destroy');
+});
+
+Route::get('/user-profile/{user_id}', function (string $id) {
+    $user = User::find($id);
+    echo $user->name;
+    echo "<br>";
+    echo $user->profile->address;
+});
+
+Route::get('/borrowing', function () {
+    $borrowing = Borrowing::all();
+
+    foreach ($borrowing as $key => $value) {
+        echo "Book: " . $value->book->title . " | User: " . $value->user->name;
+        echo "<br>";
+    }
+});
+
+Route::get('/borrower/{user_id}', function (string $id) {
+    $borrower = User::find($id);
+    echo "$borrower->name";
+    echo "<br>";
+
+    foreach ($borrower->borrowings as $key => $value) {
+        echo "Book: " . $value->book->title;
+        echo "<br>";
+    }
+});
+
+Route::get('/book-borrow/{book_id}', function (string $id) {
+    $book = Book::find($id);
+    echo "$book->title";
+    echo "<br>";
+
+    foreach ($book->borrowings as $key => $value) {
+        echo "Borrower: " . $value->user->name;
+        echo "<br>";
+    }
+});
